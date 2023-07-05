@@ -1,0 +1,12 @@
+1> delete product by id returning exception java.lang.IllegalArgumentException:
+it is ok to print   
+
+2> Patch Mapping error Taking Value from postman In Integer  [Solved]
+
+3> How To Print All Logs in File
+
+4> [PROBLEM STATEMENT] Patch Mapping update Supplier Id and Category Id by Product Id need to be done
+
+5> Global Exception Handling When Duplicate entry found how to handle it.
+
+http://localhost:8001/swagger-ui/index.html

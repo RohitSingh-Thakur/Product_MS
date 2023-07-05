@@ -1,0 +1,6 @@
+1> delete product by id returning exception java.lang.IllegalArgumentException:
+it is ok to print   
+
+2> Patch Mapping error Taking Value from postman In Integer 
+
+3> How To Print All Logs in File
