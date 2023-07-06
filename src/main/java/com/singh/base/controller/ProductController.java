@@ -1,6 +1,8 @@
 package com.singh.base.controller;
 
-import java.util.List; 
+import static com.singh.base.serviceImpl.ProductServiceImpl.serverName;
+
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -202,12 +204,20 @@ public class ProductController {
 	@GetMapping(GlobalHttpRequest_Product.GET_COMPLETEPRODUCT_BY_ID)
 	public ResponseEntity<CompleteProduct> getCompleteProductById(@PathVariable Long productId){
 		CompleteProduct completeProduct = service.getCompleteProductById(productId);
-		if(completeProduct.getProductModel() == null)throw new NoRecordFoundByIdException(Global_ExceptionConstants.NO_RECORD_FOUND_FOR_GIVEN_PRODUCT_ID_EXCEPTION);
-		else if(completeProduct.getCategoryModel() == null)throw new ServerDownException("Unable to load data because Server Is Down." + "Server Name : Category Server");
-		else if(completeProduct.getSupplierModel() == null)throw new ServerDownException("Unable to load data because Server Is Down." + "Server Name : Supplier Server");
-		else {
-			return new ResponseEntity<CompleteProduct>(completeProduct,HttpStatus.FOUND);
-		}
+
+				if(completeProduct.getProductModel() != null) {
+					if(completeProduct.getCategoryModel() != null && completeProduct.getSupplierModel() != null) {
+						return new ResponseEntity<CompleteProduct>(completeProduct, HttpStatus.FOUND);
+					}else {
+						throw new ServerDownException("Unable to load data because Server Is Down."+ "\n" + "Server Names : "+ "\n" + serverName);
+					}
+				}else {
+					throw new NoRecordFoundByIdException(Global_ExceptionConstants.NO_RECORD_FOUND_FOR_GIVEN_PRODUCT_ID_EXCEPTION);
+				}
 	}
 }
 
+//if(completeProduct.getProductModel() == null)throw new NoRecordFoundByIdException(Global_ExceptionConstants.NO_RECORD_FOUND_FOR_GIVEN_PRODUCT_ID_EXCEPTION);
+//else if(completeProduct.getSupplierModel() == null || completeProduct.getCategoryModel() == null)throw new ServerDownException("Unable to load data because Server Is Down."+ "\n" + "Server Names : "+ "\n" + serverName);
+//else
+//return new ResponseEntity<CompleteProduct>(completeProduct,HttpStatus.FOUND);

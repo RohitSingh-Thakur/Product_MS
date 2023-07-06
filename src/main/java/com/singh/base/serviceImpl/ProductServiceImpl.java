@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.singh.base.constants.GlobalHttpRequest_Product;
 import com.singh.base.dao.ProductDao;
 import com.singh.base.entity.Product;
-import com.singh.base.exceptions.ServerDownException;
 import com.singh.base.model.CategoryModel;
 import com.singh.base.model.CompleteProduct;
 import com.singh.base.model.ProductModel;
@@ -48,7 +47,9 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	private static final Logger log = Logger.getLogger(ProductServiceImpl.class);
+	public static List<String> serverName ;
+	
+	private final Logger log = Logger.getLogger(ProductServiceImpl.class);
 	
 	private String completeFileName;
 	
@@ -248,7 +249,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public CompleteProduct getCompleteProductById(Long productId) {
-
+		serverName = new ArrayList<>();
 		CompleteProduct completeProduct = new CompleteProduct();
 		
 		try {
@@ -261,6 +262,7 @@ public class ProductServiceImpl implements ProductService {
 			// NullPointer If Product Id is worng --> productModel.getCategoryId()
 			completeProduct.setCategoryModel(categoryModel);
 			}catch (ResourceAccessException e) {
+				serverName.add("Category");
 				completeProduct.setCategoryModel(null);
 			}
 			
@@ -269,12 +271,13 @@ public class ProductServiceImpl implements ProductService {
 				SupplierModel supplierModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_SUPPLIER_BY_ID + productModel.getSupplierId(), SupplierModel.class);					
 				completeProduct.setSupplierModel(supplierModel);
 			}catch (ResourceAccessException e) {
+				serverName.add("\n" + "Supplier");
 				completeProduct.setSupplierModel(null);
 				}
 			
 		}catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}	
 		return completeProduct;
 	}
 
