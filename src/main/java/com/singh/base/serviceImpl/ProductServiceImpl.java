@@ -1,6 +1,6 @@
 package com.singh.base.serviceImpl;
 
-import java.io.File; 
+import java.io.File;  
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,11 +18,18 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.singh.base.constants.GlobalHttpRequest_Product;
 import com.singh.base.dao.ProductDao;
 import com.singh.base.entity.Product;
+import com.singh.base.exceptions.ServerDownException;
+import com.singh.base.model.CategoryModel;
+import com.singh.base.model.CompleteProduct;
 import com.singh.base.model.ProductModel;
+import com.singh.base.model.SupplierModel;
 import com.singh.base.service.ProductService;
 import com.singh.base.utility.ValidateFileProducts;
 
@@ -37,6 +44,9 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	private ValidateFileProducts validateFileProducts;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	
 	private static final Logger log = Logger.getLogger(ProductServiceImpl.class);
 	
@@ -234,6 +244,38 @@ public class ProductServiceImpl implements ProductService {
 		responseMap.put("Bad Records Row Num", notValidProduct);
 		
 		return responseMap;
+	}
+
+	@Override
+	public CompleteProduct getCompleteProductById(Long productId) {
+
+		CompleteProduct completeProduct = new CompleteProduct();
+		
+		try {
+			ProductModel productModel = getProductById(productId);	// NullPointer If Product Id is worng		
+			completeProduct.setProductModel(productModel);
+			
+			try {
+			//Category
+			CategoryModel categoryModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_CATEGORY_BY_ID + productModel.getCategoryId(), CategoryModel.class);			
+			// NullPointer If Product Id is worng --> productModel.getCategoryId()
+			completeProduct.setCategoryModel(categoryModel);
+			}catch (ResourceAccessException e) {
+				completeProduct.setCategoryModel(null);
+			}
+			
+			try {
+				//Supplier
+				SupplierModel supplierModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_SUPPLIER_BY_ID + productModel.getSupplierId(), SupplierModel.class);					
+				completeProduct.setSupplierModel(supplierModel);
+			}catch (ResourceAccessException e) {
+				completeProduct.setSupplierModel(null);
+				}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return completeProduct;
 	}
 
 	

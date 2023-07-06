@@ -26,6 +26,8 @@ import com.singh.base.exceptions.NoRecordFoundByIdException;
 import com.singh.base.exceptions.NoRecordFoundWithGivenName;
 import com.singh.base.exceptions.NoRecordsFound;
 import com.singh.base.exceptions.RecordAlreadyExistException;
+import com.singh.base.exceptions.ServerDownException;
+import com.singh.base.model.CompleteProduct;
 import com.singh.base.model.ProductModel;
 import com.singh.base.service.ProductService;
 
@@ -197,5 +199,15 @@ public class ProductController {
 			return new ResponseEntity<Map<String, Object>>(uploadFile,HttpStatus.BAD_REQUEST);
 	}
 
+	@GetMapping(GlobalHttpRequest_Product.GET_COMPLETEPRODUCT_BY_ID)
+	public ResponseEntity<CompleteProduct> getCompleteProductById(@PathVariable Long productId){
+		CompleteProduct completeProduct = service.getCompleteProductById(productId);
+		if(completeProduct.getProductModel() == null)throw new NoRecordFoundByIdException(Global_ExceptionConstants.NO_RECORD_FOUND_FOR_GIVEN_PRODUCT_ID_EXCEPTION);
+		else if(completeProduct.getCategoryModel() == null)throw new ServerDownException("Unable to load data because Server Is Down." + "Server Name : Category Server");
+		else if(completeProduct.getSupplierModel() == null)throw new ServerDownException("Unable to load data because Server Is Down." + "Server Name : Supplier Server");
+		else {
+			return new ResponseEntity<CompleteProduct>(completeProduct,HttpStatus.FOUND);
+		}
+	}
 }
 

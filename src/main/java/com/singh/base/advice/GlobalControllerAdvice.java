@@ -14,6 +14,7 @@ import com.singh.base.exceptions.NoRecordFoundByIdException;
 import com.singh.base.exceptions.NoRecordFoundWithGivenName;
 import com.singh.base.exceptions.NoRecordsFound;
 import com.singh.base.exceptions.RecordAlreadyExistException;
+import com.singh.base.exceptions.ServerDownException;
 
 @RestControllerAdvice
 public class GlobalControllerAdvice{
@@ -57,6 +58,11 @@ public class GlobalControllerAdvice{
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<String> handleNullPointerException(NullPointerException obj){
 		return new ResponseEntity<String>(obj.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(ServerDownException.class)
+	public ResponseEntity<String> handleServerDownException(ServerDownException obj){
+		return new ResponseEntity<String>(obj.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
 	}
 	
 }
