@@ -16,6 +16,8 @@ public interface ProductService {
 	public CompleteProduct getCompleteProductById(Long productId);
 	
 	public ProductModel getProductByName(String productName);
+	public CompleteProduct getCompleteProductByName(String productName);
+	
 	public List<ProductModel> getAllProducts();
 	public Boolean deleteProduct(Long id);
 	public Boolean updateProductByProductId(Long productId, Map<String, Object> productFields);

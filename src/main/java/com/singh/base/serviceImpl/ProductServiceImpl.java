@@ -281,5 +281,38 @@ public class ProductServiceImpl implements ProductService {
 		return completeProduct;
 	}
 
+	@Override
+	public CompleteProduct getCompleteProductByName(String productName) {
+		serverName = new ArrayList<>();
+		CompleteProduct completeProduct = new CompleteProduct();
+		
+		try {
+			ProductModel productModel = getProductByName(productName);
+			completeProduct.setProductModel(productModel);
+			
+			try { // Supplier
+				SupplierModel supplierModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_SUPPLIER_BY_ID + productModel.getSupplierId(), SupplierModel.class);					
+				completeProduct.setSupplierModel(supplierModel);
+			}catch (ResourceAccessException e) {
+				serverName.add("\n" + "Supplier" + "\n");
+				completeProduct.setSupplierModel(null);
+			}
+			
+			
+			try {
+				//Category
+				CategoryModel categoryModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_CATEGORY_BY_ID + productModel.getCategoryId(), CategoryModel.class);			
+				completeProduct.setCategoryModel(categoryModel);
+				}catch (ResourceAccessException e) {
+					serverName.add("\n" + "Category" + "\n");
+					completeProduct.setCategoryModel(null);
+				}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return completeProduct;
+	}
+
 	
 }

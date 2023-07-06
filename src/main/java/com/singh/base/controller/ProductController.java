@@ -201,7 +201,7 @@ public class ProductController {
 			return new ResponseEntity<Map<String, Object>>(uploadFile,HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping(GlobalHttpRequest_Product.GET_COMPLETEPRODUCT_BY_ID)
+	@GetMapping(GlobalHttpRequest_Product.GET_COMPLETE_PRODUCT_BY_ID)
 	public ResponseEntity<CompleteProduct> getCompleteProductById(@PathVariable Long productId){
 		CompleteProduct completeProduct = service.getCompleteProductById(productId);
 
@@ -214,6 +214,20 @@ public class ProductController {
 				}else {
 					throw new NoRecordFoundByIdException(Global_ExceptionConstants.NO_RECORD_FOUND_FOR_GIVEN_PRODUCT_ID_EXCEPTION);
 				}
+	}
+	
+	@GetMapping(GlobalHttpRequest_Product.GET_COMPLETE_PRODUCT_BY_NAME)
+	public ResponseEntity<CompleteProduct> getCompleteProductByProductName(@RequestParam String productName){
+		CompleteProduct completeProduct = service.getCompleteProductByName(productName);
+		if(completeProduct.getProductModel() != null) {
+			if(completeProduct.getCategoryModel() != null && completeProduct.getSupplierModel() != null) {
+				return new ResponseEntity<CompleteProduct>(completeProduct, HttpStatus.FOUND);
+			}else {
+				throw new ServerDownException("Unable to load data because Server Is Down."+ "\n" + "Server Names : "+ "\n" + serverName);
+			}
+		}else {
+			throw new NoRecordFoundWithGivenName(Global_ExceptionConstants.NO_RECORD_FOUND_FOR_GIVEN_PRODUCT_NAME_EXCEPTION);
+		}		
 	}
 }
 
