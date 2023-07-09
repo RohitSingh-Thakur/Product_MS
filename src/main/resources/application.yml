@@ -6,4 +6,4 @@ eureka:
 
 spring:
   application:
-    name: PRODUCT_MS
+    name: PRODUCT-MS
