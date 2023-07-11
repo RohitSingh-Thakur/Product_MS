@@ -17,10 +17,14 @@ public class GlobalHttpRequest_Product {
 	public static final String UPLOAD_EXCELFILE = "/uploadExcellFile";
 
 	// Supplier
-	public static final String GET_SUPPLIER_BY_ID = "http://localhost:8002/get-supplier-by-id/";
+	public static final String GET_SUPPLIER_BY_ID = "http://localhost:8002/supplier_ms/get-supplier-by-id/";
+	// Load Balancing
+	public static final String GET_SUPPLIER_BY_ID_LB = "http://SUPPLIER-MS/supplier_ms/get-supplier-by-id/";
 
 
 	// Category 
-	public static final String GET_CATEGORY_BY_ID = "http://localhost:8003/get-category-by-id/";
+	public static final String GET_CATEGORY_BY_ID = "http://localhost:8003/category_ms/get-category-by-id/";
+	// Load Balancing
+	public static final String GET_CATEGORY_BY_ID_LB = "http://CATEGORY-MS/category_ms/get-category-by-id/";
 
 }

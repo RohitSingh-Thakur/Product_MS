@@ -258,7 +258,9 @@ public class ProductServiceImpl implements ProductService {
 			
 			try {
 			//Category
-			CategoryModel categoryModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_CATEGORY_BY_ID + productModel.getCategoryId(), CategoryModel.class);			
+			//CategoryModel categoryModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_CATEGORY_BY_ID + productModel.getCategoryId(), CategoryModel.class);			
+			CategoryModel categoryModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_CATEGORY_BY_ID_LB + productModel.getCategoryId(), CategoryModel.class); // here we are using Registered Service name with Eureka server called load balancing
+
 			// NullPointer If Product Id is worng --> productModel.getCategoryId()
 			completeProduct.setCategoryModel(categoryModel);
 			}catch (ResourceAccessException e) {
@@ -268,7 +270,8 @@ public class ProductServiceImpl implements ProductService {
 			
 			try {
 				//Supplier
-				SupplierModel supplierModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_SUPPLIER_BY_ID + productModel.getSupplierId(), SupplierModel.class);					
+				//SupplierModel supplierModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_SUPPLIER_BY_ID + productModel.getSupplierId(), SupplierModel.class);					
+				SupplierModel supplierModel = restTemplate.getForObject(GlobalHttpRequest_Product.GET_SUPPLIER_BY_ID_LB + productModel.getSupplierId(), SupplierModel.class);// here we are using Registered Service name with Eureka server called load balancing				
 				completeProduct.setSupplierModel(supplierModel);
 			}catch (ResourceAccessException e) {
 				serverName.add("\n" + "Supplier");
